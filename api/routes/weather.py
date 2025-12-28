@@ -4,6 +4,7 @@ Weather forecast endpoints.
 from fastapi import APIRouter, Query, Path
 from typing import Optional
 import asyncio
+import httpx
 
 from api.models.responses import (
     WeatherResponse,
@@ -14,8 +15,6 @@ from api.models.responses import (
 from core.database import get_cached_forecast, list_forecasts
 from core.exceptions import ForecastNotFoundError, DatabaseConnectionError
 from datetime import datetime
-import vertexai
-from vertexai import agent_engines
 from config import settings
 
 import logging
@@ -31,47 +30,75 @@ router = APIRouter()
 
 def trigger_forecast_preparation(city: str, language: Optional[str] = None):
     """
-    Trigger async forecast preparation using Vertex AI agent engine.
+    Trigger async forecast preparation using Weather Agent API.
 
     Args:
         city: City name to prepare forecast for
         language: Optional language code for the forecast
     """
-    if not settings.AGENT_ENGINE_ID:
+    if not settings.WEATHER_AGENT_URL:
+        logger.warning("WEATHER_AGENT_URL not configured, skipping forecast preparation")
         return
 
-    vertexai.init(
-        project=settings.GOOGLE_CLOUD_PROJECT, 
-        location=settings.GOOGLE_CLOUD_LOCATION
-    )
-
     try:
-        # Get the deployed agent engine
-        agent = agent_engines.get(settings.AGENT_ENGINE_ID)
+        # Create session and send message synchronously (fire and forget)
+        import threading
 
-        # Create prompt for forecast generation
-        language_spec = f" in {language}" if language else ""
-        prompt = f"What is the current weather condition in the city of {city} {language_spec}"
+        def make_api_calls():
+            try:
+                # Generate unique session ID
+                session_id = f"forecast_api_{city}_{language or 'default'}"
+                user_id = "forecast_api"
 
-        # Use stream_query since the agent supports 'stream' mode
-        session_id = f"user_request_{city}_{language or 'default'}"
+                # Create prompt for forecast generation
+                language_spec = f" in {language}" if language else ""
+                prompt = f"What is the current weather condition in {city}{language_spec}"
 
-        # Collect the streamed response
-        response_chunks = []
-        for chunk in agent.stream_query(
-            input=prompt,
-            config={"configurable": {"session_id": session_id}}
-        ):
-            response_chunks.append(chunk)
-            logger.debug(f"Received chunk: {chunk}")
+                with httpx.Client(timeout=30.0) as client:
+                    # Step 1: Create a session
+                    session_url = f"{settings.WEATHER_AGENT_URL}/apps/weather_agent/users/{user_id}/sessions/{session_id}"
+                    session_response = client.post(
+                        session_url,
+                        headers={"Content-Type": "application/json"},
+                        json={}
+                    )
+                    session_response.raise_for_status()
+                    logger.info(f"Created session {session_id} for {city}")
 
-        # Log the complete result
-        logger.info(f"Forecast generated for {city}: {response_chunks}")
-    except Exception as agent_error:
-        # Log agent error but don't fail the request
-        logger.warning(f"Failed to trigger forecast for {city}: {str(agent_error)}")
-        import traceback
-        logger.warning(f"Traceback: {traceback.format_exc()}")
+                    # Step 2: Send a message
+                    message_url = f"{settings.WEATHER_AGENT_URL}/run_sse"
+                    message_payload = {
+                        "appName": "weather_agent",
+                        "userId": user_id,
+                        "sessionId": session_id,
+                        "newMessage": {
+                            "role": "user",
+                            "parts": [{"text": prompt}]
+                        },
+                        "streaming": False
+                    }
+
+                    message_response = client.post(
+                        message_url,
+                        headers={
+                            "Content-Type": "application/json",
+                            "Accept": "text/event-stream"
+                        },
+                        json=message_payload
+                    )
+                    message_response.raise_for_status()
+                    logger.info(f"Sent forecast request for {city}")
+
+            except Exception as e:
+                logger.warning(f"Failed to trigger forecast for {city}: {str(e)}")
+
+        # Run in background thread (fire and forget)
+        thread = threading.Thread(target=make_api_calls, daemon=True)
+        thread.start()
+
+    except Exception as e:
+        # Log error but don't fail the request
+        logger.warning(f"Failed to start forecast preparation for {city}: {str(e)}")
 
 
 @router.get(

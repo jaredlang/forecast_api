@@ -30,8 +30,8 @@ class Settings(BaseSettings):
     CLOUD_SQL_USER: str = "postgres"
     CLOUD_SQL_PASSWORD: str
 
-    # Agent Engine Configuration
-    AGENT_ENGINE_ID: Optional[str] = None
+    # Weather Agent URL Configuration
+    WEATHER_AGENT_URL: str = "http://127.0.0.1:8000"
 
     # Logging
     LOG_LEVEL: str = "INFO"
