@@ -46,8 +46,9 @@ def trigger_forecast_preparation(city: str, language: Optional[str] = None):
 
         def make_api_calls():
             try:
-                # Generate unique session ID
-                session_id = f"forecast_api_{city}_{language or 'default'}"
+                # Generate unique session ID with timestamp
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                session_id = f"forecast_api_{city}_{language or 'en-US'}_{timestamp}"
                 user_id = "forecast_api"
 
                 # Create prompt for forecast generation
