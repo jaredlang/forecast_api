@@ -1,0 +1,49 @@
+# This file specifies files that are intentionally untracked by gcloud
+# and should not be uploaded to Google Cloud Platform.
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+*.cover
+.hypothesis/
+
+# Development
+.env
+*.log
+.DS_Store
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Documentation and test files
+tests/
+TEST_SUMMARY.md
+TESTING.md
+run_tests.sh
+run_tests.bat
+
+# Windows specific
+*.bat
+Thumbs.db
+
+# Misc
+*.swp
+*.bak
+*~

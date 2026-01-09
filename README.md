@@ -160,6 +160,7 @@ gcloud run deploy weather-forecast-api \
   --region us-central1 \
   --set-env-vars GOOGLE_CLOUD_PROJECT=your-project-id \
   --set-env-vars CLOUD_SQL_PASSWORD=your-password \
+  --port=8000 \
   --allow-unauthenticated
 ```
 
