@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     API_DESCRIPTION: str = "REST API for weather forecast retrieval"
 
     # Server Configuration
-    PORT: int = 8000
+    PORT: int = 8200
     RELOAD: bool = False
 
     # CORS Configuration
@@ -31,7 +31,7 @@ class Settings(BaseSettings):
     CLOUD_SQL_PASSWORD: str
 
     # Weather Agent URL Configuration
-    WEATHER_AGENT_URL: str = "http://127.0.0.1:8000"
+    WEATHER_AGENT_URL: str = "http://127.0.0.1:8200"
 
     # Logging
     LOG_LEVEL: str = "INFO"

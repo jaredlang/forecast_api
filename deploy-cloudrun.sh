@@ -7,7 +7,7 @@ REGION="${GCP_REGION:-us-central1}"
 SERVICE_NAME="weather-forecast-api"
 TAG="${TAG:-latest}"
 
-PORT="${PORT:-8000}"
+PORT="${PORT:-8200}"
 MEMORY="${MEMORY:-512Mi}"
 CPU="${CPU:-1}"
 MAX_INSTANCES="${MAX_INSTANCES:-10}"

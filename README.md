@@ -23,8 +23,8 @@ Get the latest valid forecast for a city.
 
 **Example:**
 ```bash
-curl http://localhost:8000/weather/chicago
-curl http://localhost:8000/weather/tokyo?language=ja
+curl http://localhost:8200/weather/chicago
+curl http://localhost:8200/weather/tokyo?language=ja
 ```
 
 ### 2. GET /weather/{city}/history
@@ -37,8 +37,8 @@ Get historical forecasts for a city.
 
 **Example:**
 ```bash
-curl http://localhost:8000/weather/chicago/history?limit=5
-curl http://localhost:8000/weather/chicago/history?include_expired=true
+curl http://localhost:8200/weather/chicago/history?limit=5
+curl http://localhost:8200/weather/chicago/history?include_expired=true
 ```
 
 ### 3. GET /stats
@@ -46,7 +46,7 @@ Get database storage statistics.
 
 **Example:**
 ```bash
-curl http://localhost:8000/stats
+curl http://localhost:8200/stats
 ```
 
 ### 4. GET /health
@@ -54,7 +54,7 @@ Health check endpoint for monitoring.
 
 **Example:**
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:8200/health
 ```
 
 ## Installation
@@ -80,14 +80,14 @@ cp .env.example .env
 
 3. **Run the server:**
 ```bash
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8200
 ```
 
 4. **Access the API:**
-- API Root: http://localhost:8000
-- Interactive Docs: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
-- Health Check: http://localhost:8000/health
+- API Root: http://localhost:8200
+- Interactive Docs: http://localhost:8200/docs
+- ReDoc: http://localhost:8200/redoc
+- Health Check: http://localhost:8200/health
 
 ## Testing
 
@@ -107,7 +107,7 @@ run_tests.bat
 **Run manual integration tests:**
 ```bash
 # Start the server first
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8200
 
 # In another terminal
 python tests/manual_test.py
@@ -148,7 +148,7 @@ docker build -t weather-forecast-api .
 
 2. **Run the container:**
 ```bash
-docker run -p 8000:8000 --env-file .env weather-forecast-api
+docker run -p 8200:8200 --env-file .env weather-forecast-api
 ```
 
 ### Google Cloud Run Deployment
@@ -160,7 +160,7 @@ gcloud run deploy weather-forecast-api \
   --region us-central1 \
   --set-env-vars GOOGLE_CLOUD_PROJECT=your-project-id \
   --set-env-vars CLOUD_SQL_PASSWORD=your-password \
-  --port=8000 \
+  --port=8200 \
   --allow-unauthenticated
 ```
 
@@ -175,7 +175,7 @@ All configuration is managed via environment variables. See [.env.example](.env.
 **Optional Variables:**
 - `API_TITLE`: API title (default: "Weather Forecast API")
 - `HOST`: Server host (default: "0.0.0.0")
-- `PORT`: Server port (default: 8000)
+- `PORT`: Server port (default: 8200)
 - `GOOGLE_CLOUD_LOCATION`: GCP region (default: "us-central1")
 - `CLOUD_SQL_INSTANCE`: Instance name (default: "weather-forecasts")
 - `CLOUD_SQL_DB`: Database name (default: "weather")

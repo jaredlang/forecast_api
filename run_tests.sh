@@ -62,7 +62,7 @@ case $TEST_TYPE in
         ;;
 
     "manual")
-        API_URL=${2:-"http://localhost:8000"}
+        API_URL=${2:-"http://localhost:8200"}
         print_step "Running manual integration tests against $API_URL..."
         print_warning "Make sure the API server is running!"
         python tests/manual_test.py $API_URL
@@ -102,7 +102,7 @@ case $TEST_TYPE in
         echo "  ./run_tests.sh"
         echo "  ./run_tests.sh unit"
         echo "  ./run_tests.sh weather"
-        echo "  ./run_tests.sh manual http://localhost:8000"
+        echo "  ./run_tests.sh manual http://localhost:8200"
         echo "  ./run_tests.sh coverage"
         exit 1
         ;;

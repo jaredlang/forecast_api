@@ -323,7 +323,7 @@ class APITester:
 
 def main():
     """Main entry point"""
-    base_url = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8080"
+    base_url = sys.argv[1] if len(sys.argv) > 1 else "http://localhost:8200"
 
     tester = APITester(base_url)
     exit_code = tester.run_all_tests()

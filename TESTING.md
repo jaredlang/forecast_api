@@ -27,7 +27,7 @@ Start the API server first:
 
 ```bash
 # In one terminal, start the server
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8200
 ```
 
 ### Run Manual Tests
@@ -39,7 +39,7 @@ uvicorn main:app --reload --port 8000
 python tests/manual_test.py
 
 # Test against specific URL
-python tests/manual_test.py http://localhost:8000
+python tests/manual_test.py http://localhost:8200
 
 # Test against remote server
 python tests/manual_test.py https://weather-api.example.com
@@ -116,13 +116,13 @@ To integrate tests into CI/CD:
   run: pip install -r requirements.txt
 
 - name: Start API server
-  run: uvicorn main:app --port 8000 &
+  run: uvicorn main:app --port 8200 &
 
 - name: Wait for server
   run: sleep 5
 
 - name: Run integration tests
-  run: python tests/manual_test.py http://localhost:8000
+  run: python tests/manual_test.py http://localhost:8200
 ```
 
 ## Troubleshooting
@@ -157,7 +157,7 @@ Check:
 
 ```bash
 # Start the API server
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8200
 
 # Run integration tests (local)
 python tests/manual_test.py

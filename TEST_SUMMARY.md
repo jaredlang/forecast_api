@@ -151,7 +151,7 @@ pip install -r requirements.txt
 pytest -v
 
 # 3. Start API server (for integration tests)
-uvicorn main:app --reload --port 8000
+uvicorn main:app --reload --port 8200
 
 # 4. Run integration tests (in another terminal)
 python tests/manual_test.py
