@@ -133,6 +133,7 @@ async def get_latest_forecast(
             "forecast": {
                 "text": result["forecast_text"],
                 "audio_base64": result["audio_data"],
+                "picture_url": result.get("picture_url"),
                 "forecast_at": result["forecast_at"],
                 "expires_at": result["expires_at"],
                 "age_seconds": result["age_seconds"],

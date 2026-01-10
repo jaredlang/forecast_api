@@ -17,6 +17,7 @@ class ForecastMetadata(BaseModel):
 class ForecastData(BaseModel):
     text: str = Field(..., description="Forecast text content")
     audio_base64: str = Field(..., description="Base64-encoded audio WAV data")
+    picture_url: Optional[str] = Field(None, description="Public URL for forecast picture")
     forecast_at: str = Field(..., description="When forecast was made (ISO 8601)")
     expires_at: str = Field(..., description="When forecast expires (ISO 8601)")
     age_seconds: int = Field(..., description="Age of forecast in seconds")

@@ -162,7 +162,7 @@ def get_cached_forecast(
                 id, forecast_text, audio_file, forecast_at,
                 expires_at, text_size_bytes, audio_size_bytes,
                 text_encoding, text_language, text_locale,
-                created_at, metadata
+                created_at, metadata, picture_url
             FROM forecasts
             WHERE city = %s
               AND expires_at > NOW()
@@ -181,10 +181,10 @@ def get_cached_forecast(
         if result:
             # Query columns: id, forecast_text, audio_file, forecast_at, expires_at,
             #               text_size_bytes, audio_size_bytes, text_encoding, text_language,
-            #               text_locale, created_at, metadata
+            #               text_locale, created_at, metadata, picture_url
             # Indices:      0,  1,             2,          3,           4,
             #               5,               6,                7,             8,
-            #               9,          10,         11
+            #               9,          10,         11,       12
 
             # Decode text
             try:
@@ -205,6 +205,7 @@ def get_cached_forecast(
                 "cached": True,
                 "forecast_text": forecast_text,
                 "audio_data": base64.b64encode(bytes(result[2])).decode('utf-8'),  # audio_file
+                "picture_url": result[12],  # picture_url
                 "forecast_at": result[3].isoformat(),  # forecast_at
                 "expires_at": result[4].isoformat(),  # expires_at
                 "age_seconds": int(age_seconds),
