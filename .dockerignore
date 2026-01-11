@@ -25,12 +25,12 @@ ENV/
 htmlcov/
 
 # Environment files (secrets should be set via Cloud Run)
+.env
 .env.local
 .env.*.local
 .env.development
 .env.test
 .env.example
-.env
 
 # Deployment scripts
 build-and-push.sh

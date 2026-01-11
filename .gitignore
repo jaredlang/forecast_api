@@ -8,6 +8,10 @@ yarn-error.log*
 .env
 .env.local
 .env.*.local
+.env.development
+.env.test
+.env.example
+.env.production
 
 # IDE
 .vscode/

@@ -20,6 +20,12 @@ CLOUD_SQL_PASSWORD_SECRET="forecast_db_password:latest"
 # Construct full image path
 IMAGE_PATH="gcr.io/${PROJECT_ID}/${SERVICE_NAME}:${TAG}"
 
+# Required environment variables
+if [ -z "${WEATHER_AGENT_URL}" ]; then
+  echo "Error: WEATHER_AGENT_URL environment variable is required"
+  exit 1
+fi
+
 echo "Deploying pre-built image to Cloud Run..."
 echo "Image: $IMAGE_PATH"
 
@@ -36,6 +42,7 @@ echo "CPU: ${CPU}"
 echo "Max Instances: ${MAX_INSTANCES}"
 echo "Min Instances: ${MIN_INSTANCES}"
 echo "Timeout: ${TIMEOUT}s"
+echo "Weather Agent URL: ${WEATHER_AGENT_URL}"
 echo "================================================"
 
 gcloud run deploy $SERVICE_NAME \
@@ -54,7 +61,8 @@ gcloud run deploy $SERVICE_NAME \
     --set-env-vars "GOOGLE_CLOUD_LOCATION=${REGION}" \
     --set-env-vars "CLOUD_SQL_INSTANCE=${CLOUD_SQL_INSTANCE}" \
     --set-secrets "CLOUD_SQL_PASSWORD=${CLOUD_SQL_PASSWORD_SECRET}" \
-    --add-cloudsql-instances "${PROJECT_ID}:${REGION}:${CLOUD_SQL_INSTANCE}"
+    --add-cloudsql-instances "${PROJECT_ID}:${REGION}:${CLOUD_SQL_INSTANCE}" \
+    --set-env-vars "WEATHER_AGENT_URL=${WEATHER_AGENT_URL}"
 
 echo "================================================"
 echo "Deployment completed successfully!"
